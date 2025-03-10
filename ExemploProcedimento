@@ -1,0 +1,69 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ExemploProcedimento
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int opcao;
+            Console.WriteLine("Escolha a sua opção:\n" +
+                        "1 - Adição\n" +
+                        "2 - Subtração\n" +
+                        "3 - Multiplicação\n" +
+                   "4 - Divisão");
+            opcao = int.Parse(Console.ReadLine());
+                    switch (opcao) { 
+                    case 1: 
+                            calcularAdicao();
+                            break;
+                    case 2:
+                            calcularSub();
+                            break;
+                    case 3:
+                            //calcularMulti();
+                            break;
+                    case 4: 
+                            //calcularDiv(); 
+                            break;
+                    default:
+                        Console.WriteLine("Fim do Programa");
+                            break;
+                      }
+                } //fecha o main
+        static void calcularAdicao()
+        {
+            double v1, v2, res;
+            Console.WriteLine("Digite o  primeiro valor");
+            v1 = Double.Parse(Console.ReadLine());
+            Console.WriteLine("Digite o segundo valor");
+            v2 = Double.Parse(Console.ReadLine());
+            res = v1 + v2;
+            Console.WriteLine("Soma = " + res);
+        }
+        static void calcularSub()
+        {
+            double v1, v2, res;
+            Console.WriteLine("Digite o  primeiro valor");
+            v1 = Double.Parse(Console.ReadLine());
+            Console.WriteLine("Digite o segundo valor");
+            v2 = Double.Parse(Console.ReadLine());
+            res = v1 - v2;
+            Console.WriteLine("Subtração = " + res);
+        }
+        static void calcularMulti()
+        {
+            //...
+        }
+        static void calcularDiv()
+        {
+            //...
+        }
+    }
+}
+
