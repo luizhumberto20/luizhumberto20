@@ -1,0 +1,37 @@
+using System;
+using System.Collections.Generic;
+
+namespace ED_Atividade01
+{
+    class SomaNumeros
+    {
+        static void Main(string[] args)
+        {
+            List<int> numeros = new List<int>();
+            int soma = 0;
+
+            // Solicita 5 números inteiros
+            for (int i = 0; i < 5; i++)
+            {
+                Console.Write($"Digite o {i + 1}º número inteiro: ");
+                int numero;
+
+                while (!int.TryParse(Console.ReadLine(), out numero))
+                {
+                    Console.Write("Entrada inválida. Digite um número inteiro: ");
+                }
+
+                numeros.Add(numero);
+                soma += numero;
+            }
+
+            Console.WriteLine("\nNúmeros digitados:");
+            foreach (int numero in numeros)
+            {
+                Console.WriteLine(numero);
+            }
+
+            Console.WriteLine($"\nA soma dos números é: {soma}");
+        }
+    }
+}
