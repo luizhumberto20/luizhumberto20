@@ -1,0 +1,60 @@
+using System;
+using System.Collections.Generic;
+
+namespace ED_Atividade01
+{
+    class ValoresAcimaDaMediaDinamico
+    {
+        static void Main(string[] args)
+        {
+            List<int> numeros = new List<int>();
+            int soma = 0;
+
+            Console.WriteLine("Digite números inteiros (digite 'sair' para finalizar):");
+
+            while (true)
+            {
+                Console.Write("Digite um número: ");
+                string entrada = Console.ReadLine();
+
+                if (entrada.ToLower() == "sair") 
+                    break;
+
+                if (int.TryParse(entrada, out int numero))
+                {
+                    numeros.Add(numero);
+                    soma += numero;
+                }
+                else
+                {
+                    Console.WriteLine("Entrada inválida! Digite um número inteiro.");
+                }
+            }
+
+            Console.WriteLine("\nNúmeros digitados:");
+            foreach (int numero in numeros)
+            {
+                Console.WriteLine(numero);
+            }
+
+            if (numeros.Count > 0)
+            {
+                double media = soma / (double)numeros.Count;
+                Console.WriteLine($"\nA média aritmética dos números é: {media:F2}");
+
+                Console.WriteLine("\nValores acima da média:");
+                foreach (int numero in numeros)
+                {
+                    if (numero > media)
+                    {
+                        Console.WriteLine(numero);
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("\nNenhum número foi digitado.");
+            }
+        }
+    }
+}
