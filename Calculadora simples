@@ -1,0 +1,57 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Ativ04_questao01
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            char operador;
+            double numero1, numero2;
+            Console.WriteLine("Escolha a operação:\n" +
+                "+ para adcionar\n" +
+                "- para subtrair\n" +
+                "* para multiplicação\n" +
+                "/ para divisão");
+            operador = char.Parse(Console.ReadLine());
+            Console.WriteLine("digite o valor do numero1:");
+            numero1 = int.Parse(Console.ReadLine());
+            Console.WriteLine("digite o valor do numero2");
+            numero2 = int.Parse(Console.ReadLine());
+            Console.WriteLine(usarCalculadora(numero1, numero2, operador));
+            Console.ReadLine();
+        }
+        static string usarCalculadora( double n1, double n2, char op)
+        {
+            if ((n1 == 0 || n2 == 0) && (op == '/'))
+            {
+                return "ERRO - a operação de divisão não pode ser realizada.";
+            }
+            else
+            {
+                switch (op)
+                {
+                    case '+':
+                        return "resultado = " + Convert.ToString(n1 + n2);
+                        break;
+                    case '-':
+                        return "resultado = " + Convert.ToString(n1 - n2);
+                        break;
+                    case '*':
+                        return "resultado = " + Convert.ToString(n1 * n2);
+                        break;
+                    case '/':
+                        return "resultado = " + Convert.ToString(n1 / n2);
+                        break;
+                    default:
+                        return "operador inválido";
+                        break;
+                }
+            }
+        }
+    }
+}
