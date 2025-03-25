@@ -1,0 +1,114 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program
+{
+    static void Main()
+    {
+        GerenciadorNumeros.ExibirMenu();
+    }
+}
+
+static class GerenciadorNumeros
+{
+    private static List<int> numeros = new List<int>();
+
+    public static void ExibirMenu()
+    {
+        int opcao;
+        do
+        {
+            Console.WriteLine("\n----- MENU -----");
+            Console.WriteLine("1 - Adicionar número");
+            Console.WriteLine("2 - Listar números");
+            Console.WriteLine("3 - Exibir números acima da média");
+            Console.WriteLine("4 - Sair");
+            Console.Write("Escolha uma opção: ");
+
+            if (int.TryParse(Console.ReadLine(), out opcao))
+            {
+                switch (opcao)
+                {
+                    case 1:
+                        AdicionarNumero();
+                        break;
+                    case 2:
+                        ListarNumeros();
+                        break;
+                    case 3:
+                        ExibirNumerosAcimaDaMedia();
+                        break;
+                    case 4:
+                        Console.WriteLine("Encerrando o programa...");
+                        break;
+                    default:
+                        Console.WriteLine("Opção inválida! Tente novamente.");
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Entrada inválida! Digite um número.");
+            }
+
+        } while (opcao != 4);
+    }
+
+    public static void AdicionarNumero()
+    {
+        Console.Write("Digite um número inteiro: ");
+        if (int.TryParse(Console.ReadLine(), out int numero))
+        {
+            numeros.Add(numero);
+            Console.WriteLine("Número adicionado com sucesso!");
+        }
+        else
+        {
+            Console.WriteLine("Entrada inválida! Digite um número inteiro.");
+        }
+    }
+
+    public static void ListarNumeros()
+    {
+        if (numeros.Count == 0)
+        {
+            Console.WriteLine("Nenhum número foi adicionado ainda.");
+        }
+        else
+        {
+            Console.WriteLine("\nNúmeros armazenados:");
+            foreach (var numero in numeros)
+            {
+                Console.WriteLine(numero);
+            }
+        }
+    }
+
+    public static void ExibirNumerosAcimaDaMedia()
+    {
+        if (numeros.Count == 0)
+        {
+            Console.WriteLine("Nenhum número foi adicionado ainda.");
+            return;
+        }
+
+        double media = (double)numeros.Sum() / numeros.Count;
+        Console.WriteLine($"\nMédia aritmética: {media:F2}");
+        
+        var acimaDaMedia = numeros.Where(n => n > media).ToList();
+        
+        if (acimaDaMedia.Count == 0)
+        {
+            Console.WriteLine("Nenhum número está acima da média.");
+        }
+        else
+        {
+            Console.WriteLine("Números acima da média:");
+            foreach (var numero in acimaDaMedia)
+            {
+                Console.WriteLine(numero);
+            }
+        }
+    }
+}
