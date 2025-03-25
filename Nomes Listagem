@@ -1,0 +1,115 @@
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        GerenciadorNomes.ExibirMenu();
+    }
+}
+
+static class GerenciadorNomes
+{
+    private static List<string> nomes = new List<string>();
+
+    public static void ExibirMenu()
+    {
+        int opcao;
+        do
+        {
+            Console.WriteLine("\n----- MENU -----");
+            Console.WriteLine("1 - Adicionar nome");
+            Console.WriteLine("2 - Listar nomes");
+            Console.WriteLine("3 - Buscar nome");
+            Console.WriteLine("4 - Sair");
+            Console.Write("Escolha uma opção: ");
+
+            if (int.TryParse(Console.ReadLine(), out opcao))
+            {
+                switch (opcao)
+                {
+                    case 1:
+                        AdicionarNome();
+                        break;
+                    case 2:
+                        ListarNomes();
+                        break;
+                    case 3:
+                        BuscarNome();
+                        break;
+                    case 4:
+                        Console.WriteLine("Encerrando o programa...");
+                        break;
+                    default:
+                        Console.WriteLine("Opção inválida! Tente novamente.");
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Entrada inválida! Digite um número.");
+            }
+
+        } while (opcao != 4);
+    }
+
+    public static void AdicionarNome()
+    {
+        Console.Write("Digite um nome: ");
+        string nome = Console.ReadLine()?.Trim();
+
+        if (!string.IsNullOrEmpty(nome))
+        {
+            nomes.Add(nome);
+            Console.WriteLine("Nome adicionado com sucesso!");
+        }
+        else
+        {
+            Console.WriteLine("Nome inválido! Tente novamente.");
+        }
+    }
+
+    public static void ListarNomes()
+    {
+        if (nomes.Count == 0)
+        {
+            Console.WriteLine("Nenhum nome foi adicionado ainda.");
+        }
+        else
+        {
+            Console.WriteLine("\nNomes armazenados:");
+            foreach (var nome in nomes)
+            {
+                Console.WriteLine(nome);
+            }
+        }
+    }
+
+    public static void BuscarNome()
+    {
+        if (nomes.Count == 0)
+        {
+            Console.WriteLine("Nenhum nome foi adicionado ainda.");
+            return;
+        }
+
+        Console.Write("Digite o nome a ser buscado: ");
+        string nomeBuscado = Console.ReadLine()?.Trim();
+
+        if (string.IsNullOrEmpty(nomeBuscado))
+        {
+            Console.WriteLine("Nome inválido! Tente novamente.");
+            return;
+        }
+
+        if (nomes.Contains(nomeBuscado))
+        {
+            Console.WriteLine($"O nome '{nomeBuscado}' foi encontrado na lista.");
+        }
+        else
+        {
+            Console.WriteLine($"O nome '{nomeBuscado}' não foi encontrado na lista.");
+        }
+    }
+}
