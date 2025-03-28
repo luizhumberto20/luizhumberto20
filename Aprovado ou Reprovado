@@ -1,0 +1,157 @@
+using System;
+
+class Pauta
+{
+    // Atributos
+    private int matricula;
+    private string nomeAluno;
+    private int numFalta;
+    private double nota1;
+    private double nota2;
+
+    // Construtor sem parâmetros
+    public Pauta()
+    {
+        matricula = 0;
+        nomeAluno = "";
+        numFalta = 0;
+        nota1 = 0.0;
+        nota2 = 0.0;
+    }
+
+    // Construtor com parâmetros
+    public Pauta(int matricula, string nomeAluno, int numFalta, double nota1, double nota2)
+    {
+        this.matricula = matricula;
+        this.nomeAluno = nomeAluno;
+        this.numFalta = numFalta;
+        this.nota1 = nota1;
+        this.nota2 = nota2;
+    }
+
+    // Métodos Get e Set
+    public int GetMatricula() { return matricula; }
+    public void SetMatricula(int matricula) { this.matricula = matricula; }
+
+    public string GetNomeAluno() { return nomeAluno; }
+    public void SetNomeAluno(string nomeAluno) { this.nomeAluno = nomeAluno; }
+
+    public int GetNumFalta() { return numFalta; }
+    public void SetNumFalta(int numFalta) { this.numFalta = numFalta; }
+
+    public double GetNota1() { return nota1; }
+    public void SetNota1(double nota1) { this.nota1 = nota1; }
+
+    public double GetNota2() { return nota2; }
+    public void SetNota2(double nota2) { this.nota2 = nota2; }
+
+    // Método para calcular média
+    public double CalcularMedia()
+    {
+        return (nota1 + nota2) / 2;
+    }
+
+    // Método para verificar se está reprovado por falta (limite de 15 faltas)
+    public bool EstaReprovadoPorFalta()
+    {
+        return numFalta > 15;
+    }
+
+    // Método para verificar a situação final do aluno
+    public string SituacaoFinal()
+    {
+        if (EstaReprovadoPorFalta())
+        {
+            return "Reprovado por falta";
+        }
+        else if (CalcularMedia() >= 7.0)
+        {
+            return "Aprovado";
+        }
+        else
+        {
+            return "Reprovado por nota";
+        }
+    }
+
+    // Método ToString para exibir todos os dados
+    public override string ToString()
+    {
+        return $"Matrícula: {matricula}\nNome: {nomeAluno}\nFaltas: {numFalta}\nNota 1: {nota1}\nNota 2: {nota2}\nMédia: {CalcularMedia():F2}\nSituação: {SituacaoFinal()}";
+    }
+}
+
+// Classe principal para executar o programa
+class PautaMain
+{
+    static void Main()
+    {
+        Pauta aluno = new Pauta(); // Criando um objeto da classe Pauta
+        int opcao;
+
+        do
+        {
+            Console.WriteLine("\nMENU:");
+            Console.WriteLine("1 - Cadastrar um aluno");
+            Console.WriteLine("2 - Mostrar todos os dados do aluno");
+            Console.WriteLine("3 - Verificar se o aluno está reprovado por falta");
+            Console.WriteLine("4 - Mostrar a média do aluno");
+            Console.WriteLine("5 - Mostrar situação de aprovação ou reprovação");
+            Console.WriteLine("6 - Finalizar operações");
+            Console.Write("Escolha uma opção: ");
+            
+            opcao = Convert.ToInt32(Console.ReadLine());
+
+            switch (opcao)
+            {
+                case 1:
+                    Console.Write("Digite a matrícula do aluno: ");
+                    int matricula = Convert.ToInt32(Console.ReadLine());
+
+                    Console.Write("Digite o nome do aluno: ");
+                    string nomeAluno = Console.ReadLine();
+
+                    Console.Write("Digite o número de faltas: ");
+                    int numFalta = Convert.ToInt32(Console.ReadLine());
+
+                    Console.Write("Digite a primeira nota: ");
+                    double nota1 = Convert.ToDouble(Console.ReadLine());
+
+                    Console.Write("Digite a segunda nota: ");
+                    double nota2 = Convert.ToDouble(Console.ReadLine());
+
+                    aluno = new Pauta(matricula, nomeAluno, numFalta, nota1, nota2);
+                    Console.WriteLine("\nAluno cadastrado com sucesso!");
+                    break;
+
+                case 2:
+                    Console.WriteLine("\nDADOS DO ALUNO:");
+                    Console.WriteLine(aluno.ToString());
+                    break;
+
+                case 3:
+                    if (aluno.EstaReprovadoPorFalta())
+                        Console.WriteLine("\nO aluno está REPROVADO por falta.");
+                    else
+                        Console.WriteLine("\nO aluno NÃO está reprovado por falta.");
+                    break;
+
+                case 4:
+                    Console.WriteLine($"\nMédia do aluno: {aluno.CalcularMedia():F2}");
+                    break;
+
+                case 5:
+                    Console.WriteLine($"\nSituação final do aluno: {aluno.SituacaoFinal()}");
+                    break;
+
+                case 6:
+                    Console.WriteLine("Finalizando programa...");
+                    break;
+
+                default:
+                    Console.WriteLine("Opção inválida! Tente novamente.");
+                    break;
+            }
+        } while (opcao != 6);
+    }
+}
