@@ -1,0 +1,141 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ProvaLuizHumberto
+{
+    class Paciente
+    {
+        private string nomePaciente;
+        private int idade;
+        private string classificacaoPrioridade;
+        private double despesas;
+
+
+        public Paciente()
+        {
+            this.nomePaciente = "";
+            this.idade = 0;
+            this.classificacaoPrioridade = "Azul";
+            this.despesas = 0.0;
+        }
+
+
+        public string GetNomePaciente() => nomePaciente;
+        public void SetNomePaciente(string nome) => nomePaciente = nome;
+
+        public int GetIdade() => idade;
+        public void SetIdade(int idade) => this.idade = idade;
+
+        public string GetClassificacaoPrioridade() => classificacaoPrioridade;
+        public void SetClassificacaoPrioridade(string classificacao) => classificacaoPrioridade = classificacao;
+
+        public double GetDespesas() => despesas;
+        public void SetDespesas(double valor) => despesas = valor;
+
+
+        public void AlterarClassificacao(string novaClassificacao)
+        {
+            if (novaClassificacao == "Vermelho" || novaClassificacao == "Amarelo" || novaClassificacao == "Verde" || novaClassificacao == "Azul")
+            {
+                classificacaoPrioridade = novaClassificacao;
+                Console.WriteLine("\nClassificação alterada com sucesso!");
+            }
+            else
+            {
+                Console.WriteLine("\nErro: Cor inválida! Escolha entre Vermelho, Amarelo, Verde ou Azul.");
+            }
+        }
+
+
+        public void InserirDespesas(double valor)
+        {
+            if (valor > 0)
+            {
+                despesas += valor;
+                Console.WriteLine("\nDespesa adicionada com sucesso!");
+            }
+            else
+            {
+                Console.WriteLine("\nErro: Valor inválido! Insira um valor positivo.");
+            }
+        }
+
+
+        public override string ToString()
+        {
+            return $"\nNome: {nomePaciente}\nIdade: {idade}\nClassificação de Prioridade: {classificacaoPrioridade}\nDespesas Totais: R${despesas:F2}";
+        }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            Paciente paciente = new Paciente();
+            bool executando = true;
+
+            while (executando)
+            {
+                Console.WriteLine("\n===== MENU =====");
+                Console.WriteLine("1 - Cadastrar paciente");
+                Console.WriteLine("2 - Mostrar dados do paciente");
+                Console.WriteLine("3 - Mudar situação do paciente");
+                Console.WriteLine("4 - Inserir despesas do paciente");
+                Console.WriteLine("5 - Finalizar operações");
+                Console.Write("Escolha uma opção: ");
+
+                int opcao;
+                if (!int.TryParse(Console.ReadLine(), out opcao))
+                {
+                    Console.WriteLine("\nErro: Digite um número válido!");
+                    continue;
+                }
+
+                switch (opcao)
+                {
+                    case 1:
+                        Console.Write("\nNome do Paciente: ");
+                        paciente.SetNomePaciente(Console.ReadLine());
+
+                        Console.Write("Idade do Paciente: ");
+                        int idade;
+                        if (int.TryParse(Console.ReadLine(), out idade) && idade > 0)
+                            paciente.SetIdade(idade);
+                        else
+                            Console.WriteLine("\nErro: Idade inválida!");
+                        break;
+
+                    case 2:
+                        Console.WriteLine(paciente.ToString());
+                        break;
+
+                    case 3:
+                        Console.Write("\nNova Classificação (Vermelho, Amarelo, Verde ou Azul): ");
+                        paciente.AlterarClassificacao(Console.ReadLine());
+                        break;
+
+                    case 4:
+                        Console.Write("\nValor da despesa: R$");
+                        double valor;
+                        if (double.TryParse(Console.ReadLine(), out valor))
+                            paciente.InserirDespesas(valor);
+                        else
+                            Console.WriteLine("\nErro: Valor inválido!");
+                        break;
+
+                    case 5:
+                        Console.WriteLine("\nEncerrando programa...");
+                        executando = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("\nOpção inválida! Escolha entre 1 e 5.");
+                        break;
+                }
+            }
+        }
+    }
+}
