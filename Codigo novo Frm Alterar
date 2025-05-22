@@ -1,0 +1,251 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using MySql.Data.MySqlClient;  //linha inserida
+
+namespace Atividade11_estagio
+{
+    public partial class Frm_alterar : Form
+    {
+        Candidato candidato = new Candidato();
+        public Frm_alterar()
+        {
+            InitializeComponent();
+
+            // Centraliza o formulário na tela
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+            // Exemplo de padronização visual (ajuste no Designer para todos os controles)
+            // this.BackColor = Color.LightSteelBlue;
+
+            // ToolTips para botões (adicione ToolTip no Designer para melhor experiência)
+            ToolTip toolTip = new ToolTip();
+            toolTip.SetToolTip(btn_voltar, "Voltar ao menu principal");
+            // toolTip.SetToolTip(btn_limpar, "Limpar todos os campos"); // se criar botão Limpar
+            // toolTip.SetToolTip(btn_sair, "Fechar o sistema"); // se criar botão Sair
+        }
+
+        private void btn_voltar_Click(object sender, EventArgs e)
+        {
+            Dispose();
+        }
+
+        private void btn_alterar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Validação de campos obrigatórios
+                if (string.IsNullOrWhiteSpace(txb_nome.Text))
+                {
+                    MessageBox.Show("O campo Nome é obrigatório.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txb_nome.Focus();
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(txb_data_nas.Text))
+                {
+                    MessageBox.Show("O campo Data de Nascimento é obrigatório.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txb_data_nas.Focus();
+                    return;
+                }
+                DateTime dataNasc;
+                if (!DateTime.TryParse(txb_data_nas.Text, out dataNasc))
+                {
+                    MessageBox.Show("Data de nascimento inválida. Use o formato dd/MM/yyyy.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    txb_data_nas.Focus();
+                    return;
+                }
+
+                candidato.nome = txb_nome.Text;
+                candidato.data_nas = dataNasc;
+
+                candidato.alterarCandidato(txb_filtro.Text);     //está na classe candidato
+                MessageBox.Show("Dados alterados com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(
+                    $"Nome: {candidato.nome}\n" +
+                    $"Data Nasc.: {candidato.data_nas:dd/MM/yyyy}\n" +
+                    $"Área: {candidato.area_atuacao}\n" +
+                    $"Matutino: {candidato.matutino}\n" +
+                    $"Vespertino: {candidato.vespertino}\n" +
+                    $"Noturno: {candidato.noturno}\n" +
+                    $"Escolaridade: {candidato.escolaridade}",
+                    "Resumo da Alteração", MessageBoxButtons.OK, MessageBoxIcon.Information
+                );
+
+                limparTela();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao alterar os dados: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void limparTela()
+        {
+            txb_nome.Clear();
+            txb_data_nas.Clear();
+            rdb_adm.Checked = false;
+            rdb_com.Checked = false;
+            rdb_eng.Checked = false;
+            rdb_sau.Checked = false;
+            ckb_mat.Checked = false;
+            ckb_vesp.Checked = false;
+            ckb_not.Checked = false;
+            cbb_escolaridade.Text = "";
+            // Mensagem opcional
+            // MessageBox.Show("Formulário limpo para nova alteração.", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void btn_pesquisar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string filtro = txb_filtro.Text;
+                if (string.IsNullOrWhiteSpace(filtro))
+                {
+                    MessageBox.Show("Digite o nome do candidato para pesquisar.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txb_filtro.Focus();
+                    return;
+                }
+
+                MySqlDataReader reader = this.candidato.pesquisarCandidato(filtro);
+                if (reader.Read())
+                {
+                    txb_nome.Text = reader.GetString(0);
+
+                    object obj = reader.GetValue(1);
+                    DateTime txb_data = Convert.ToDateTime(obj);
+                    txb_data_nas.Text = txb_data.ToString("dd/MM/yyyy");
+
+                    string area = reader.GetString(2);
+                    if (area == "Administração")
+                    {
+                        rdb_adm.Checked = true;
+                        candidato.area_atuacao = "Administração";
+                    }
+                    else if (area == "Computação")
+                    {
+                        rdb_com.Checked = true;
+                        candidato.area_atuacao = "Computação";
+                    }
+                    else if (area == "Engenharia")
+                    {
+                        rdb_eng.Checked = true;
+                        candidato.area_atuacao = "Engenharia";
+                    }
+                    else if (area == "Saúde")
+                    {
+                        rdb_sau.Checked = true;
+                        candidato.area_atuacao = "Saúde";
+                    }
+                    ckb_mat.Checked = Convert.ToString(reader.GetValue(3)) == "True";
+                    candidato.matutino = ckb_mat.Checked ? 1 : 0;
+
+                    ckb_vesp.Checked = Convert.ToString(reader.GetValue(4)) == "True";
+                    candidato.vespertino = ckb_vesp.Checked ? 1 : 0;
+
+                    ckb_not.Checked = Convert.ToString(reader.GetValue(5)) == "True";
+                    candidato.noturno = ckb_not.Checked ? 1 : 0;
+
+                    string escolaridade = Convert.ToString(reader.GetValue(6));
+                    if (escolaridade == "1")
+                    {
+                        cbb_escolaridade.Text = "Médio";
+                        candidato.escolaridade = 1;
+                    }
+                    else if (escolaridade == "2")
+                    {
+                        cbb_escolaridade.Text = "Técnico";
+                        candidato.escolaridade = 2;
+                    }
+                    else
+                    {
+                        cbb_escolaridade.Text = "Superior";
+                        candidato.escolaridade = 3;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Candidato não encontrado. Verifique o nome digitado.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao pesquisar: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Os demais métodos permanecem iguais, mas você pode adicionar ToolTips e mensagens conforme desejar.
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void rdb_adm_CheckedChanged(object sender, EventArgs e)
+        {
+            candidato.area_atuacao = "Administração";
+        }
+
+        private void rdb_com_CheckedChanged(object sender, EventArgs e)
+        {
+            candidato.area_atuacao = "Computação";
+        }
+
+        private void rdb_eng_CheckedChanged(object sender, EventArgs e)
+        {
+            candidato.area_atuacao = "Engenharia";
+        }
+
+        private void rdb_sau_CheckedChanged(object sender, EventArgs e)
+        {
+            candidato.area_atuacao = "Saúde";
+        }
+
+        private void ckb_mat_CheckedChanged(object sender, EventArgs e)
+        {
+            candidato.matutino = ckb_mat.Checked ? 1 : 0;
+        }
+
+        private void ckb_vesp_CheckedChanged(object sender, EventArgs e)
+        {
+            candidato.vespertino = ckb_vesp.Checked ? 1 : 0;
+        }
+
+        private void ckb_not_CheckedChanged(object sender, EventArgs e)
+        {
+            candidato.noturno = ckb_not.Checked ? 1 : 0;
+        }
+
+        private void cbb_escolaridade_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbb_escolaridade.Text == "Médio")
+            {
+                candidato.escolaridade = 1;
+            }
+            else if (cbb_escolaridade.Text == "Técnico")
+            {
+                candidato.escolaridade = 2;
+            }
+            else
+            {
+                candidato.escolaridade = 3;
+            }
+        }
+
+        private void txb_filtro_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
